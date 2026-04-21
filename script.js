@@ -1,89 +1,40 @@
-// ===========================
+// ===================================================
 //  STICKERZONE — script.js
-//  Auto i18n + dynamic packs
-// ===========================
-
-// =============================================
-//  👇 MODIFIE ICI TES PACKS — C'est tout !
+// ===================================================
+//  👇 AJOUTE TES PACKS ICI — C'est tout !
 //
-//  emoji   : l'emoji affiché sur la carte
-//  image   : chemin vers une image (optionnel)
-//            ex: "images/monpack.png"
-//            si vide, l'emoji sera utilisé
-//  nom     : le nom du pack
-//  stickers: nombre de stickers
-//  taille  : taille du fichier
-//  lien    : ton lien Sticker.ly
-//  badge   : "Populaire", "Nouveau" ou "" (vide)
-//  nouveauBadge: true si badge rouge "Nouveau"
-// =============================================
+//  emoji    → l'emoji sur la carte
+//  nom      → nom du pack
+//  stickers → nombre de stickers
+//  taille   → ex: "1.2 MB"
+//  lien     → ton lien WhatsApp
+//  badge    → "Populaire", "Nouveau" ou "" (vide)
+// ===================================================
 
 const packs = [
-  {
-    emoji: "😎",
-    image: "",
-    nom: "3D EMOJI",
-    stickers: 17,
-    taille: "3.9 MB",
-    lien: "https://whatsapp.com/channel/0029VbCRcpAIt5ro4kShr414/100",
-    badge: "Populaire",
-    nouveauBadge: false
-  },
-  {
-    emoji: "👻",
-    image: "",
-    nom: "Ghost Vibes",
-    stickers: 24,
-    taille: "0.9 MB",
-    lien: "#",
-    badge: "",
-    nouveauBadge: false
-  },
-  {
-    emoji: "🔥",
-    image: "",
-    nom: "Mood Fire",
-    stickers: 20,
-    taille: "1.3 MB",
-    lien: "#",
-    badge: "Nouveau",
-    nouveauBadge: true
-  },
-  {
-    emoji: "💀",
-    image: "",
-    nom: "Dark Humor",
-    stickers: 16,
-    taille: "0.8 MB",
-    lien: "#",
-    badge: "",
-    nouveauBadge: false
-  },
-  {
-    emoji: "🤩",
-    image: "",
-    nom: "Star Energy",
-    stickers: 22,
-    taille: "1.0 MB",
-    lien: "#",
-    badge: "",
-    nouveauBadge: false
-  },
-  {
-    emoji: "😎",
-    image: "",
-    nom: "Chill Zone",
-    stickers: 18,
-    taille: "1.2 MB",
-    lien: "#",
-    badge: "",
-    nouveauBadge: false
-  },
+
+  // ✅ PACK 1 — 3D EMOJI
+  { emoji: "😎", nom: "3D Emoji", stickers: 17, taille: "3.9 MB", lien: "https://whatsapp.com/channel/0029VbCRcpAIt5ro4kShr414/100", badge: "Populaire" },
+
+  // 🔽 AJOUTE TES PACKS EN DESSOUS — copie une ligne et modifie les infos
+
+  // ❤️ LOVE
+  { emoji: "❤️", nom: "Love Vibes", stickers: 0, taille: "- MB", lien: "#", badge: "Nouveau" },
+
+  // 😂 HUMOUR
+  { emoji: "😂", nom: "Humour Pack", stickers: 0, taille: "- MB", lien: "#", badge: "" },
+
+  // 🌸 FLORAN
+  { emoji: "🌸", nom: "Floran", stickers: 0, taille: "- MB", lien: "#", badge: "" },
+
+  // 🎌 MANGAS
+  { emoji: "🎌", nom: "Mangas Zone", stickers: 0, taille: "- MB", lien: "#", badge: "" },
+
 ];
 
-// =============================================
-//  NE TOUCHE PAS AU CODE EN DESSOUS 👇
-// =============================================
+// ===================================================
+//  🚫 NE TOUCHE PAS AU CODE EN DESSOUS
+// ===================================================
 
 const translations = {
   fr: {
@@ -287,10 +238,7 @@ function genererPacks(lang) {
   grid.innerHTML = packs.map(pack => `
     <div class="pack-card">
       <div class="pack-thumb">
-        ${pack.image
-          ? `<img src="${pack.image}" alt="${pack.nom}" style="width:100%;height:100%;object-fit:cover;">`
-          : `<span class="pack-emoji">${pack.emoji}</span>`
-        }
+        <span class="pack-emoji">${pack.emoji}</span>
       </div>
       <div class="pack-info">
         <h3 class="pack-name">${pack.nom}</h3>
@@ -300,7 +248,7 @@ function genererPacks(lang) {
         </div>
         <a href="${pack.lien}" target="_blank" class="btn-add">${btn}</a>
       </div>
-      ${pack.badge ? `<span class="pack-badge ${pack.nouveauBadge ? 'new' : ''}">${pack.badge}</span>` : ''}
+      ${pack.badge ? `<span class="pack-badge ${pack.badge === 'Nouveau' ? 'new' : ''}">${pack.badge}</span>` : ''}
     </div>
   `).join('');
 }
