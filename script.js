@@ -14,21 +14,23 @@
 const packs = [
 
   // ✅ PACK 1 — 3D EMOJI
-  { emoji: "😎", nom: "3D Emoji", stickers: 17, taille: "3.9 MB", lien: "https://whatsapp.com/channel/0029VbCRcpAIt5ro4kShr414/100", badge: "Populaire" },
+  { emoji: "", image: "https://www.image2url.com/r2/default/images/1776735283982-2afa6570-877b-4708-a0ea-da74a584ce1b.jpg", nom: "3D Emoji", stickers: 17, taille: "3.9 MB", lien: "https://whatsapp.com/channel/0029VbCRcpAIt5ro4kShr414/100", badge: "Populaire" },
 
-  // 🔽 AJOUTE TES PACKS EN DESSOUS — copie une ligne et modifie les infos
+  // 🔽 AJOUTE TES PACKS EN DESSOUS
+  // Pour une image : image: "images/monpack.jpg"
+  // Sans image     : image: "" (l'emoji sera utilisé)
 
   // ❤️ LOVE
-  { emoji: "❤️", nom: "Love Vibes", stickers: 0, taille: "- MB", lien: "#", badge: "Nouveau" },
+  { emoji: "❤️", image: "", nom: "Love Vibes", stickers: 0, taille: "- MB", lien: "#", badge: "Nouveau" },
 
   // 😂 HUMOUR
-  { emoji: "😂", nom: "Humour Pack", stickers: 0, taille: "- MB", lien: "#", badge: "" },
+  { emoji: "😂", image: "", nom: "Humour Pack", stickers: 0, taille: "- MB", lien: "#", badge: "" },
 
   // 🌸 FLORAN
-  { emoji: "🌸", nom: "Floran", stickers: 0, taille: "- MB", lien: "#", badge: "" },
+  { emoji: "🌸", image: "", nom: "Floran", stickers: 0, taille: "- MB", lien: "#", badge: "" },
 
   // 🎌 MANGAS
-  { emoji: "🎌", nom: "Mangas Zone", stickers: 0, taille: "- MB", lien: "#", badge: "" },
+  { emoji: "🎌", image: "", nom: "Mangas Zone", stickers: 0, taille: "- MB", lien: "#", badge: "" },
 
 ];
 
@@ -238,7 +240,10 @@ function genererPacks(lang) {
   grid.innerHTML = packs.map(pack => `
     <div class="pack-card">
       <div class="pack-thumb">
-        <span class="pack-emoji">${pack.emoji}</span>
+        ${pack.image
+          ? `<img src="${pack.image}" alt="${pack.nom}" style="width:100%;height:100%;object-fit:cover;border-radius:0;">`
+          : `<span class="pack-emoji">${pack.emoji}</span>`
+        }
       </div>
       <div class="pack-info">
         <h3 class="pack-name">${pack.nom}</h3>
