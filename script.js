@@ -20,12 +20,12 @@
 
 const packs = [
   {
-    emoji: "😂",
+    emoji: "😎",
     image: "",
-    nom: "Mon Pack Drôle",
-    stickers: 18,
-    taille: "1.1 MB",
-    lien: "#",
+    nom: "3D EMOJI",
+    stickers: 17,
+    taille: "3.9 MB",
+    lien: "lien: "https://whatsapp.com/channel/0029VbCRcpAIt5ro4kShr414/100",",
     badge: "Populaire",
     nouveauBadge: false
   },
