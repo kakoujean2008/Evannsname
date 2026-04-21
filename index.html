@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StickerZone – Stickers WhatsApp Gratuits</title>
   <meta name="description" content="Télécharge des packs de stickers gratuits pour WhatsApp. Drôles, mignons, expressifs — pour tous les goûts !" />
-  <meta name="monetag" content="937779073fa3f8c9f75bf7c37d4b076a">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -14,6 +13,15 @@
   <script src="https://pl29208103.profitablecpmratenetwork.com/af/94/56/af9456ce7bf7583e26e8e5fd9fc9ad37.js"></script>
 </head>
 <body>
+
+  <!-- BANNIÈRE D'ACCUEIL -->
+  <div class="welcome-banner" id="welcome-banner">
+    <div class="welcome-content">
+      <span class="welcome-icon">⚠️</span>
+      <p>Ce site contient des publicités. Si tu en croises une, appuie simplement sur <strong>Retour</strong> pour revenir sur le site. Bonne visite ! 😊</p>
+    </div>
+    <button class="welcome-close" onclick="document.getElementById('welcome-banner').style.display='none'">✕</button>
+  </div>
 
   <!-- HEADER -->
   <header>
@@ -37,6 +45,7 @@
       <h1 data-i18n="hero_title">Des stickers qui <em>parlent</em> pour toi</h1>
       <p data-i18n="hero_sub">Packs de stickers pour WhatsApp — drôles, expressifs, uniques. Ajoute-les en un clic.</p>
       <a href="#packs" class="btn-primary" data-i18n="hero_cta">Voir les packs →</a>
+      <a href="https://www.profitablecpmratenetwork.com/d3xb0mfrgm?key=900ea8cae53705a95abbcf6637a1b67e" target="_blank" class="btn-premium">⭐ Stickers Premium</a>
     </div>
     <div class="hero-floats">
       <span class="float f1">😂</span>
@@ -61,6 +70,16 @@
   <div class="ad-zone" id="ad-top">
     <!-- Adsterra / Monetag code here -->
     <p class="ad-label">Publicité</p>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="search-section">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" class="search-input" placeholder="Recherche un pack... ex: drôle, amour, manga" />
+      <button class="search-btn" id="search-btn">Rechercher</button>
+    </div>
+    <div id="search-status" class="search-status"></div>
   </div>
 
   <!-- PACKS GRID -->
