@@ -103,8 +103,10 @@ function afficherPacks(listePacks, lang) {
     en: "✅ Add to WhatsApp", pt: "✅ Adicionar ao WhatsApp", ar: "✅ إضافة إلى واتساب"
   };
   const btn = btnTexte[lang] || btnTexte['fr'];
-  grid.innerHTML = listePacks.map(pack => `
-    <div class="pack-card">
+  grid.innerHTML = listePacks.map(pack => {
+    const ancre = pack.nom.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return `
+    <div class="pack-card" id="${ancre}">
       <div class="pack-thumb">
         ${pack.image
           ? `<img src="${pack.image}" alt="${pack.nom}" style="width:100%;height:100%;object-fit:cover;">`
@@ -118,11 +120,11 @@ function afficherPacks(listePacks, lang) {
           <span>⚖️ ${pack.taille}</span>
         </div>
         <a href="${pack.lien}" target="_blank" class="btn-add">${btn}</a>
-        <button class="btn-share" onclick="partagePack('${pack.nom}', '${pack.lien}')">🔗 Partager</button>
+        <button class="btn-share" onclick="partagePack('${pack.nom}', '${ancre}')">🔗 Partager</button>
       </div>
       ${pack.badge ? `<span class="pack-badge ${pack.badge === 'Nouveau' ? 'new' : ''}">${pack.badge}</span>` : ''}
     </div>
-  `).join('');
+  `}).join('');
   initScrollReveal();
 }
 
@@ -135,6 +137,7 @@ async function genererPacks(lang) {
     packsGlobal = packsSecours;
   }
   afficherPacks(packsGlobal, lang);
+  scrollVersAncre();
 }
 
 function initScrollReveal() {
@@ -222,7 +225,8 @@ Si aucun pack ne correspond, réponds: aucun`
 }
 
 // Partager un pack
-function partagePack(nom, lien) {
+function partagePack(nom, ancre) {
+  const lien = `${window.location.origin}${window.location.pathname}#${ancre}`;
   if (navigator.share) {
     navigator.share({
       title: `StickerZone — ${nom}`,
@@ -231,8 +235,19 @@ function partagePack(nom, lien) {
     });
   } else {
     navigator.clipboard.writeText(lien).then(() => {
-      alert('✅ Lien copié dans le presse-papiers !');
+      alert('✅ Lien copié : ' + lien);
     });
+  }
+}
+
+// Scroll vers l'ancre au chargement
+function scrollVersAncre() {
+  const hash = window.location.hash.slice(1);
+  if (hash) {
+    setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 800);
   }
 }
 
@@ -241,15 +256,16 @@ function initBubbleTimer() {
   const overlay = document.getElementById('bubble-overlay');
   const timerEl = document.getElementById('bubble-timer');
   const closeBtn = document.getElementById('bubble-close');
-  if (!overlay) return;
+  if (!overlay || !timerEl || !closeBtn) return;
 
   let seconds = 5;
+  timerEl.textContent = seconds;
+
   const interval = setInterval(() => {
     seconds--;
     timerEl.textContent = seconds;
     if (seconds <= 0) {
       clearInterval(interval);
-      timerEl.textContent = '0';
       closeBtn.disabled = false;
       closeBtn.classList.add('active');
     }
