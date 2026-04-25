@@ -180,6 +180,23 @@
     .error-msg { display:none;background:rgba(200,50,50,.08);border:1px solid rgba(200,50,50,.25);border-radius:12px;padding:18px 24px;color:#e07070;font-size:.88rem;text-align:center;width:100%;max-width:820px;margin-top:20px; }
     .error-msg.show { display:block; }
 
+    /* ── COUNTDOWN OVERLAY (point 3) ── */
+    .countdown-overlay {
+      display:none;position:fixed;inset:0;z-index:500;
+      background:rgba(5,5,7,0.92);backdrop-filter:blur(8px);
+      flex-direction:column;align-items:center;justify-content:center;gap:28px;
+    }
+    .countdown-overlay.active { display:flex; }
+    .countdown-title { font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--white);text-align:center; }
+    .countdown-number { font-family:'Bebas Neue',sans-serif;font-size:5rem;color:var(--gold);line-height:1;text-shadow:0 0 40px var(--glow); }
+    .countdown-bar-wrap { width:260px;height:3px;background:var(--border);border-radius:3px;overflow:hidden; }
+    .countdown-bar { height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;width:100%;transform-origin:left;transition:transform 1s linear; }
+    .countdown-sub { font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--silver);opacity:.5; }
+
+    /* ── REGEN SMARTLINK BTN (point 2) ── */
+    .btn-regen-smart { padding:14px 28px;background:transparent;border:1px solid rgba(201,168,76,0.35);border-radius:var(--radius);color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;cursor:none;transition:all .3s;display:flex;align-items:center;gap:10px; }
+    .btn-regen-smart:hover { background:rgba(201,168,76,.08);transform:translateY(-2px); }
+
     .action-row { display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px;width:100%; }
 
     .btn-download { padding:14px 28px;background:transparent;border:1px solid var(--gold);border-radius:var(--radius);color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;cursor:none;transition:all .3s;display:flex;align-items:center;gap:10px; }
@@ -275,6 +292,14 @@
   </style>
 </head>
 <body>
+
+<!-- COUNTDOWN OVERLAY -->
+<div class="countdown-overlay" id="countdownOverlay">
+  <p class="countdown-title">✦ L'IA compose ton œuvre…</p>
+  <div class="countdown-number" id="countdownNum">5</div>
+  <div class="countdown-bar-wrap"><div class="countdown-bar" id="countdownBar"></div></div>
+  <p class="countdown-sub">Préparation de ta création</p>
+</div>
 
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
@@ -396,6 +421,9 @@
           </svg>
           Partager
         </button>
+        <button class="btn-regen-smart" onclick="regenWithSmart()">
+          ↺ &nbsp; Régénérer
+        </button>
       </div>
       <p class="dl-notice">
         ✦ <strong>100% gratuit</strong> — Une publicité s'ouvrira dans un nouvel onglet lors du téléchargement. C'est ce qui nous permet de rester gratuits.
@@ -407,7 +435,7 @@
       <div class="feedback-title">✦ Ce style te plaît ?</div>
       <div class="feedback-sub">L'IA s'adapte à tes goûts pour les prochaines créations.</div>
       <div class="feedback-btns">
-        <button class="fb-btn fb-btn-yes" onclick="giveFeedback('yes')">
+        <button class="fb-btn fb-btn-yes" onclick="giveFeedback('yes'); openSmart();">
           <span class="fb-btn-emoji">❤️</span>
           J'adore !
         </button>
@@ -819,18 +847,7 @@ Now describe this image:`
   let currentImageUrl = '';
   let currentName = '';
   let currentStyleForFeedback = '';
-
-  function shareImage() {
-    const shareUrl = window.location.href;
-    const shareText = `✦ J'ai transformé mon nom "${currentName}" en œuvre d'art avec l'IA ! Crée le tien gratuitement →`;
-    if (navigator.share) {
-      navigator.share({ title: 'Evanns Name', text: shareText, url: shareUrl });
-    } else {
-      navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
-        showToast('✦ Lien copié dans le presse-papiers !');
-      });
-    }
-  }
+  // shareImage() définie dans SMARTLINK HELPERS ci-dessus
 
   // ─── FEEDBACK SYSTEM ─────────────────────────────────
   function showFeedback() {
@@ -884,6 +901,59 @@ Now describe this image:`
       ? `${val} — Fond d'écran IA | Evanns Name`
       : 'Evanns Name — Transforme ton nom en art';
   });
+
+  // ─── SMARTLINK HELPERS ───────────────────────────────
+  const SMART_URL = 'https://omg10.com/4/10921151';
+
+  function openSmart() {
+    window.open(SMART_URL, '_blank');
+  }
+
+  // Point 2 — Régénérer avec smartlink
+  function regenWithSmart() {
+    openSmart();
+    generateImage();
+  }
+
+  // Point 4 — Partager avec smartlink
+  function shareImage() {
+    openSmart();
+    const shareUrl = window.location.href;
+    const shareText = `✦ J'ai transformé mon nom "${currentName}" en œuvre d'art avec l'IA ! Crée le tien gratuitement →`;
+    if (navigator.share) {
+      navigator.share({ title: 'Evanns Name', text: shareText, url: shareUrl });
+    } else {
+      navigator.clipboard.writeText(`${shareText} ${shareUrl}`).then(() => {
+        showToast('✦ Lien copié dans le presse-papiers !');
+      });
+    }
+  }
+
+  // Point 3 — Compte à rebours intermédiaire avant d'afficher l'image
+  function showCountdown(callback) {
+    const overlay = document.getElementById('countdownOverlay');
+    const numEl   = document.getElementById('countdownNum');
+    const barEl   = document.getElementById('countdownBar');
+
+    overlay.classList.add('active');
+    // Ouvre smartlink dès que l'overlay apparaît
+    openSmart();
+
+    let count = 5;
+    numEl.textContent = count;
+    barEl.style.transform = 'scaleX(1)';
+
+    const tick = setInterval(() => {
+      count--;
+      numEl.textContent = count;
+      barEl.style.transform = `scaleX(${count / 5})`;
+      if (count <= 0) {
+        clearInterval(tick);
+        overlay.classList.remove('active');
+        callback();
+      }
+    }, 1000);
+  }
 
   // ─── GENERATE ─────────────────────────────────────────
   async function generateImage() { // already async
@@ -987,30 +1057,33 @@ Now describe this image:`
     img.classList.remove('loaded');
 
     img.onload = () => {
-      hideLoading();
-      wrap.style.display = 'block';
-      setTimeout(() => img.classList.add('loaded'), 50);
-      dlWrap.style.display = 'flex';
+      // Point 3 : compte à rebours avant d'afficher l'image
+      showCountdown(() => {
+        hideLoading();
+        wrap.style.display = 'block';
+        setTimeout(() => img.classList.add('loaded'), 50);
+        dlWrap.style.display = 'flex';
 
-      totalGenerated++;
-      localStorage.setItem('evannsTotalGen', totalGenerated);
-      updateCounter();
+        totalGenerated++;
+        localStorage.setItem('evannsTotalGen', totalGenerated);
+        updateCounter();
 
-      addToGallery(imageUrl, name, null);
+        addToGallery(imageUrl, name, null);
 
-      dlBtn.onclick = (e) => {
-        e.preventDefault();
-        window.open('https://omg10.com/4/10921151', '_blank');
-        const a = document.createElement('a');
-        a.href = imageUrl;
-        a.download = `evanns-name-${name.toLowerCase().replace(/\s+/g,'-')}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      };
+        dlBtn.onclick = (e) => {
+          e.preventDefault();
+          window.open('https://omg10.com/4/10921151', '_blank');
+          const a = document.createElement('a');
+          a.href = imageUrl;
+          a.download = `evanns-name-${name.toLowerCase().replace(/\s+/g,'-')}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        };
 
-      // Show feedback after a short delay
-      setTimeout(() => showFeedback(), 800);
+        // Show feedback after a short delay
+        setTimeout(() => showFeedback(), 800);
+      });
     };
 
     img.onerror = () => {
